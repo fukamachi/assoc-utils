@@ -14,7 +14,8 @@
            #:alist-keys
            #:alist-values
            #:alistp
-           #:alist))
+           #:alist
+           #:alist=))
 (in-package :assoc-utils)
 
 (defvar *assoc-test* #'equal)
@@ -103,3 +104,9 @@
            t)))
 
 (deftype alist () '(satisfies alistp))
+
+(defun alist= (alist1 alist2)
+  (check-type alist1 alist)
+  (check-type alist2 alist)
+  (equalp (sort (copy-seq alist1) #'string< :key #'car)
+          (sort (copy-seq alist2) #'string< :key #'car)))

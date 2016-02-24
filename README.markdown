@@ -86,6 +86,14 @@ Utilities for manipulating association lists.
 ;=> T
 ```
 
+### alist=
+
+```common-lisp
+(alist= '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))
+        '(("email" . "e.arrows@gmail.com") ("name" . "Eitaro")))
+;=> T
+```
+
 ## Installation
 
 ```common-lisp

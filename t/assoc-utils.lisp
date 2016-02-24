@@ -5,7 +5,7 @@
         :prove))
 (in-package :assoc-utils-test)
 
-(plan 7)
+(plan 8)
 
 (subtest "aget"
   (is-error (aget 1 1) 'error)
@@ -70,5 +70,14 @@
   (ok (not (alistp (cons 1 2))))
 
   (is-type '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com")) 'alist))
+
+(subtest "alist="
+  (ok (alist= '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))
+              '(("email" . "e.arrows@gmail.com") ("name" . "Eitaro"))))
+  (ok (not (alist= '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))
+                   '(("name" . "Eitaro")))))
+  (ok (not (alist= '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))
+                   '())))
+  (ok (alist= nil nil)))
 
 (finalize)
