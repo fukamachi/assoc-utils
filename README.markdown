@@ -104,10 +104,6 @@ Utilities for manipulating association lists.
 
 * Eitaro Fukamachi (e.arrows@gmail.com)
 
-## Copyright
-
-Copyright (c) 2016 Eitaro Fukamachi (e.arrows@gmail.com)
-
 ## License
 
-Licensed under the Public Domain License.
+Assoc-Utils is free and unencumbered software released into the public domain.
