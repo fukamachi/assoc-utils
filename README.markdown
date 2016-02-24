@@ -1,5 +1,9 @@
 # Assoc-Utils
 
+[![Build Status](https://travis-ci.org/fukamachi/assoc-utils.svg?branch=master)](https://travis-ci.org/fukamachi/assoc-utils)
+[![Coverage Status](https://coveralls.io/repos/fukamachi/assoc-utils/badge.svg?branch=master)](https://coveralls.io/r/fukamachi/assoc-utils)
+[![Quicklisp dist](http://quickdocs.org/badge/assoc-utils.svg)](http://quickdocs.org/assoc-utils/)
+
 Utilities for manipulating association lists.
 
 ## Usage
