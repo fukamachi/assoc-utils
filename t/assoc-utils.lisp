@@ -55,7 +55,8 @@
     (is (hash-table-count hash) 2)
     (is (gethash "name" hash) "Eitaro")
     (is (gethash "email" hash) "e.arrows@gmail.com")
-    (is (hash-alist hash) alist)))
+    (is (sort (hash-alist hash) #'string< :key #'car)
+        (sort alist #'string< :key #'car))))
 
 (subtest "alist-keys & alist-values"
   (let ((alist '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
