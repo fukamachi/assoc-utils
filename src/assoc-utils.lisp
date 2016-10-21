@@ -98,6 +98,7 @@
       (and (consp value)
            (mapl (lambda (tree)
                    (unless (and (consp (first tree))
+                                (not (consp (first (first tree))))
                                 (listp (rest tree)))
                      (return-from alistp nil)))
                  value)

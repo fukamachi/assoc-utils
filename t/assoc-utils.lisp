@@ -50,7 +50,7 @@
     (is (plist-alist plist) alist)))
 
 (subtest "alist-hash & hash-alist"
-  (let* ((alist '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com")))
+  (let* ((alist (copy-seq '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
          (hash (alist-hash alist)))
     (is (hash-table-count hash) 2)
     (is (gethash "name" hash) "Eitaro")
@@ -65,6 +65,7 @@
 
 (subtest "alistp"
   (ok (alistp '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
+  (ok (not (alistp '((("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))))
   (ok (alistp '()))
   (ok (not (alistp 1)))
   (ok (not (alistp (cons 1 2))))
