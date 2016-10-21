@@ -1,5 +1,5 @@
 language: common-lisp
-sudo: false
+sudo: required
 
 env:
   global:
@@ -19,11 +19,6 @@ install:
   # Install Roswell
   - curl -L https://raw.githubusercontent.com/snmsts/roswell/release/scripts/install-for-ci.sh | sh
   - ros install prove
-
-cache:
-  directories:
-    - $HOME/.roswell
-    - $HOME/.config/common-lisp
 
 script:
   - run-prove assoc-utils-test.asd
