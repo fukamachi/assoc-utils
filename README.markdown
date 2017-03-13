@@ -56,6 +56,19 @@ Utilities for manipulating association lists.
 ;=> (("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))
 ```
 
+### alist-hash & hash-alist
+
+```common-lisp
+(defvar *person*
+  '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com")))
+
+(alist-hash *person*)
+;=> #<HASH-TABLE :TEST EQUAL :COUNT 2 {1004329443}>
+
+(hash-alist *)
+;=> (("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))
+```
+
 ### alist-keys & alist-values
 
 ```common-lisp
