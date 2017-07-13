@@ -86,15 +86,18 @@
                 (cdr kv))))))
 
 (defun hash-alist (hash &key recursivep)
-  (loop for key being the hash-keys of hash
-          using (hash-value value)
-        if recursivep
-          collect (cons key
-                        (typecase value
-                          (hash-table (hash-alist value :recursivep t))
-                          (otherwise value)))
-        else
-          collect (cons key value)))
+  (labels ((rec-conv (value)
+             (typecase value
+               (hash-table (hash-alist value :recursivep t))
+               (cons (mapcar #'rec-conv value))
+               (otherwise value))))
+    (loop for key being the hash-keys of hash
+            using (hash-value value)
+          if recursivep
+            collect (cons key
+                          (rec-conv value))
+          else
+            collect (cons key value))))
 
 (defun alist-keys (alist)
   (mapcar #'car alist))
