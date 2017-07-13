@@ -77,15 +77,24 @@
   (loop for (k v) on plist by #'cddr
         collect (cons (string-downcase k) v)))
 
-(defun alist-hash (alist)
+(defun alist-hash (alist &key recursivep)
   (let ((hash (make-hash-table :test #'equal)))
     (dolist (kv alist hash)
-      (setf (gethash (car kv) hash) (cdr kv)))))
+      (setf (gethash (car kv) hash)
+            (if (and recursivep (alistp (cdr kv)))
+                (alist-hash (cdr kv) :recursivep t)
+                (cdr kv))))))
 
-(defun hash-alist (hash)
+(defun hash-alist (hash &key recursivep)
   (loop for key being the hash-keys of hash
           using (hash-value value)
-        collect (cons key value)))
+        if recursivep
+          collect (cons key
+                        (typecase value
+                          (hash-table (hash-alist value :recursivep t))
+                          (otherwise value)))
+        else
+          collect (cons key value)))
 
 (defun alist-keys (alist)
   (mapcar #'car alist))
