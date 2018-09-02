@@ -5,7 +5,7 @@
         :prove))
 (in-package :assoc-utils-test)
 
-(plan 8)
+(plan 9)
 
 (subtest "aget"
   (is-error (aget 1 1) 'error)
