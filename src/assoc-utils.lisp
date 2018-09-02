@@ -34,7 +34,7 @@
           alist)
         (cons (cons key value) alist))))
 
-(define-setf-expander aget (alist key &environment env)
+(define-setf-expander aget (alist key &optional default &environment env)
   (multiple-value-bind (dummies vals newvals setter getter)
       (get-setf-expansion alist env)
     (let ((newval (first newvals)))
@@ -44,7 +44,7 @@
               `(let ((,newval (%aput ,alist ,key ,newval)))
                  ,setter
                  ,newval)
-              `(aget ,getter ,key)))))
+              `(aget ,getter ,key ,default)))))
 
 (defun remove-from-alist (alist &rest keys)
   (remove-if

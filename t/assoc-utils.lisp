@@ -22,6 +22,11 @@
     (setf (aget alist "address") "Japan")
     (is (aget alist "address") "Japan")))
 
+(subtest "(incf aget)"
+  (let (alist)
+    (incf (aget alist "value" 0))
+    (is (aget alist "value") 1)))
+
 (subtest "remove-from-alist & delete-from-alist"
   (let ((alist '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
     (is (remove-from-alist alist "name")
