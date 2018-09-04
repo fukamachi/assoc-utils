@@ -5,7 +5,7 @@
         :prove))
 (in-package :assoc-utils-test)
 
-(plan 8)
+(plan 9)
 
 (subtest "aget"
   (is-error (aget 1 1) 'error)
@@ -21,6 +21,11 @@
     (is (aget alist "name") "Fukamachi")
     (setf (aget alist "address") "Japan")
     (is (aget alist "address") "Japan")))
+
+(subtest "(incf aget)"
+  (let (alist)
+    (incf (aget alist "value" 0))
+    (is (aget alist "value") 1)))
 
 (subtest "remove-from-alist & delete-from-alist"
   (let ((alist '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
