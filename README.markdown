@@ -26,7 +26,7 @@ Utilities for manipulating association lists.
 (setf (aget *person* "name") "Eitaro Fukamachi")
 
 *person*
-;=> (("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))
+;=> (("name" . "Eitaro Fukamachi") ("email" . "e.arrows@gmail.com"))
 ```
 
 ### remove-from-alist & delete-from-alist
