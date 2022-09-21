@@ -52,20 +52,9 @@
      (find (car kv) keys :test *assoc-test*))
    alist))
 
+(define-modify-macro delete-from-alist  (&rest keys) remove-from-alist)
+(define-modify-macro delete-from-alistf (&rest keys) remove-from-alist)
 (define-modify-macro remove-from-alistf (&rest keys) remove-from-alist)
-
-(defun delete-from-alist (alist &rest keys)
-  (let ((alist
-          (member-if-not (lambda (kv)
-                           (find (car kv) keys :test *assoc-test*))
-                         alist)))
-    (mapl (lambda (tree)
-            (let ((kv (second tree)))
-              (when (find (car kv) keys :test *assoc-test*)
-                (rplacd tree (cddr tree)))))
-          alist)))
-
-(define-modify-macro delete-from-alistf (&rest keys) delete-from-alist)
 
 (defun alist-plist (alist)
   (mapcan (lambda (kv)
