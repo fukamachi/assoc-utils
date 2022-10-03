@@ -5,7 +5,7 @@
         :prove))
 (in-package :assoc-utils-test)
 
-(plan 9)
+(plan 10)
 
 (subtest "aget"
   (is-error (aget 1 1) 'error)
@@ -46,6 +46,15 @@
 
   (let ((alist '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
     (delete-from-alistf alist "name")
+    (is alist '(("email" . "e.arrows@gmail.com")))))
+
+(subtest "remove-values-from-alist & delete-values-from-alist"
+  (let ((alist '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
+    (is (remove-values-from-alist alist "Eitaro")
+        '(("email" . "e.arrows@gmail.com")))
+    (is alist '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
+  (let ((alist '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
+    (delete-values-from-alist alist "Eitaro")
     (is alist '(("email" . "e.arrows@gmail.com")))))
 
 (subtest "alist-plist & plist-alist"

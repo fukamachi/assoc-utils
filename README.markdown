@@ -43,6 +43,26 @@ Utilities for manipulating association lists.
 ;=> (("email" . "e.arrows@gmail.com"))
 ```
 
+### remove-values-from-alist & delete-values-from-alist
+
+```common-lisp
+(defparameter *person*
+  '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com")))
+
+(remove-values-from-alist *person* "Eitaro")
+;=> (("email" . "e.arrows@gmail.com"))
+
+*person*
+;=> (("name" . "Eitaro") ("email" . "e.arrows@gmail.com")))
+
+;; Destructive version
+(delete-values-from-alist *person* "e.arrows@gmail.com")
+;=> (("name" . "Eitaro"))
+
+*person*
+;=> (("name" . "Eitaro"))
+```
+
 ### alist-plist & plist-alist
 
 ```common-lisp
