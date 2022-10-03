@@ -7,6 +7,8 @@
            #:remove-from-alistf
            #:delete-from-alist
            #:delete-from-alistf
+           #:remove-values-from-alist
+           #:delete-values-from-alist
            #:alist-plist
            #:plist-alist
            #:alist-hash
@@ -55,6 +57,14 @@
 (define-modify-macro delete-from-alist  (&rest keys) remove-from-alist)
 (define-modify-macro delete-from-alistf (&rest keys) remove-from-alist)
 (define-modify-macro remove-from-alistf (&rest keys) remove-from-alist)
+
+(defun remove-values-from-alist (alist &rest values)
+  (remove-if
+   (lambda (kv)
+     (find (cdr kv) values :test *assoc-test*))
+   alist))
+
+(define-modify-macro delete-values-from-alist (&rest values) remove-values-from-alist)
 
 (defun alist-plist (alist)
   (mapcan (lambda (kv)
