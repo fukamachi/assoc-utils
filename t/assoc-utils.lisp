@@ -2,88 +2,94 @@
 (defpackage assoc-utils-test
   (:use :cl
         :assoc-utils
-        :prove))
+        :rove))
 (in-package :assoc-utils-test)
 
-(plan 9)
+(deftest aget
+  (ok (signals (aget 1 1)))
+  (ok (eql (aget nil 1) nil))
+  (ok (string= (aget nil 1 "dflv") "dflv"))
+  (ok (signals (aget (cons 1 2) 1)))
+  (ok (signals (aget (list (cons 1 2) 3) #\x)))
+  (ok (string= (aget (list (cons "name" "Eitaro")) "name") "Eitaro")))
 
-(subtest "aget"
-  (is-error (aget 1 1) 'error)
-  (is (aget nil 1) nil)
-  (is (aget nil 1 "dflv") "dflv")
-  (is-error (aget (cons 1 2) 1) 'error)
-  (is-error (aget '((1 . 2) 3) #\x) 'error)
-  (is (aget '(("name" . "Eitaro")) "name") "Eitaro"))
-
-(subtest "(setf aget)"
+(deftest setf-aget
   (let ((alist '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
     (setf (aget alist "name") "Fukamachi")
-    (is (aget alist "name") "Fukamachi")
+    (ok (string= (aget alist "name") "Fukamachi"))
     (setf (aget alist "address") "Japan")
-    (is (aget alist "address") "Japan")))
+    (ok (string= (aget alist "address") "Japan"))))
 
-(subtest "(incf aget)"
-  (let (alist)
-    (incf (aget alist "value" 0))
-    (is (aget alist "value") 1)))
+(deftest incf-aget
+  (let (alist2)
+    (incf (aget alist2 "value" 0))
+    (ok (= (aget alist2 "value") 1))))
 
-(subtest "remove-from-alist & delete-from-alist"
+(deftest remove-from-alist
   (let ((alist '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
-    (is (remove-from-alist alist "name")
-        '(("email" . "e.arrows@gmail.com")))
-    (is alist '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
+    (ok (equalp (remove-from-alist alist "name")
+		'(("email" . "e.arrows@gmail.com"))))
+    (ok (equalp alist '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))))
+
+(deftest delete-from-alist
   (let ((alist '(("name" . "Eitaro")
                  ("email" . "e.arrows@gmail.com")
                  ("address" . "Japan"))))
-    (is (delete-from-alist alist "email")
-        '(("name" . "Eitaro") ("address" . "Japan")))
+    (ok (equalp (delete-from-alist alist "email")
+		'(("name" . "Eitaro") ("address" . "Japan"))))
     (setf alist '(("name" . "Eitaro") ("address" . "Japan")))
-    (is (delete-from-alist alist "name")
-        '(("address" . "Japan"))))
+    (ok (equalp (delete-from-alist alist "name")
+		'(("address" . "Japan"))))))
+
+(deftest remove-from-alistf
   (let ((alist '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
     (remove-from-alistf alist "name")
-    (is alist '(("email" . "e.arrows@gmail.com"))))
+    (ok (equalp alist '(("email" . "e.arrows@gmail.com"))))))
 
+(deftest delete-from-alistf
   (let ((alist '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
     (delete-from-alistf alist "name")
-    (is alist '(("email" . "e.arrows@gmail.com")))))
+    (ok (equalp alist '(("email" . "e.arrows@gmail.com"))))))
 
-(subtest "alist-plist & plist-alist"
-  (let ((alist '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com")))
-        (plist '(:name "Eitaro" :email "e.arrows@gmail.com")))
-    (is (alist-plist alist) plist)
-    (is (plist-alist plist) alist)))
+(let ((alist (list (cons "name" "Eitaro") (cons "email" "e.arrows@gmail.com")))
+      (plist (list :name "Eitaro" :email "e.arrows@gmail.com")))
+  (deftest alist-plist
+    (ok (equalp plist (alist-plist alist))))
+  (deftest plist-alist
+    (ok (equalp alist (plist-alist plist)))))
 
-(subtest "alist-hash & hash-alist"
-  (let* ((alist (copy-seq '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
-         (hash (alist-hash alist)))
-    (is (hash-table-count hash) 2)
-    (is (gethash "name" hash) "Eitaro")
-    (is (gethash "email" hash) "e.arrows@gmail.com")
-    (is (sort (hash-alist hash) #'string< :key #'car)
-        (sort alist #'string< :key #'car))))
+(deftest association-list-hash-table
+  (testing "alist-hash & hash-alist"
+    (let* ((alist (copy-seq (list (cons "name" "Eitaro") (cons "email" "e.arrows@gmail.com"))))
+	   (hash (alist-hash alist)))
+      (ok (= (hash-table-count hash) 2))
+      (ok (string= (gethash "name" hash) "Eitaro"))
+      (ok (string= (gethash "email" hash) "e.arrows@gmail.com"))
+      (ok (equalp (sort (hash-alist hash) #'string< :key #'car)
+		  (sort alist #'string< :key #'car))))))
 
-(subtest "alist-keys & alist-values"
+(deftest alist-keys
   (let ((alist '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
-    (is (alist-keys alist) '("name" "email"))
-    (is (alist-values alist) '("Eitaro" "e.arrows@gmail.com"))))
+    (ok (equalp (alist-keys alist) '("name" "email")))))
 
-(subtest "alistp"
+(deftest alist-values
+  (let ((alist (list (cons "name" "Eitaro") (cons "email" "e.arrows@gmail.com"))))
+    (ok (equalp (alist-values alist) (list "Eitaro" "e.arrows@gmail.com")))))
+
+(deftest alistp
   (ok (alistp '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
   (ok (not (alistp '((("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))))
   (ok (alistp '()))
   (ok (not (alistp 1)))
   (ok (not (alistp (cons 1 2))))
 
-  (is-type '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com")) 'alist))
+  (ok (typep '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com")) 'alist)))
 
-(subtest "alist="
-  (ok (alist= '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))
-              '(("email" . "e.arrows@gmail.com") ("name" . "Eitaro"))))
+(deftest alist=
+  (ok (alist= (list (cons "name" "Eitaro") (cons "email" "e.arrows@gmail.com"))
+              (list (cons "email" "e.arrows@gmail.com") (cons "name" "Eitaro"))))
   (ok (not (alist= '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))
                    '(("name" . "Eitaro")))))
   (ok (not (alist= '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))
                    '())))
   (ok (alist= nil nil)))
-
-(finalize)
