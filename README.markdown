@@ -29,6 +29,34 @@ Utilities for manipulating association lists.
 ;=> (("name" . "Eitaro Fukamachi") ("email" . "e.arrows@gmail.com"))
 ```
 
+### with-keys
+
+The macro `with-keys` is the alist equivalent of [`with-slots`](https://novaspec.org/cl/f_with-slots).
+
+```common-lisp
+(with-keys
+   ("name" (loc "location") (time "time" 2024))
+    (list (cons "name" "eitaro") (cons "location" "vienna"))
+  (declare (string name))
+  (setf loc (string-upcase loc))
+  (format nil "Hi, ~a in ~a around ~a!" name loc time))
+;; => "Hi, eitaro in VIENNA around 2024!"
+```
+
+The first parameter is a list of keys that `with-keys` will reference in the alist
+provided in the second parameter. `With-keys` will attempt to convert each
+key into a symbol, binding the alist value to it during body execution.
+
+If you don't want `with-keys` to guess the symbol for a key, supply a list -
+`(symbol key)` - in place of the key, as in `(loc "location")` above.
+If the key is a number, you have to supply a symbol name since common lisp
+symbols can not consist of only numbers.
+
+If you want to supply a default value, you have to supply a list -
+`(symbol key default)` - in place of the key, as in `(time "time" 2024)`.
+
+Code and documentation adapted from [cl-hash-util](https://github.com/orthecreedence/cl-hash-util).
+
 ### remove-from-alist & delete-from-alist
 
 ```common-lisp

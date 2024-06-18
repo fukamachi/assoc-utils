@@ -25,6 +25,34 @@
     (incf (aget alist2 "value" 0))
     (ok (= (aget alist2 "value") 1))))
 
+
+(deftest with-keys
+  (let ((alist (list (cons "name" "Eitaro") (cons "email" "e.arrows@gmail.com")))
+	(alist2 (list (cons 1 "hello") (cons 2 "bye")))
+	(alist3 (list (cons :first 11) (cons :second 22))))
+    (ok (string= (with-keys ("name")
+		     alist
+		   name)
+		 "Eitaro"))
+    (ok (null (with-keys ("namee")
+		  alist
+		namee)))
+    (ok (string= (with-keys ((the-name "name"))
+		     alist
+		   the-name)
+		 "Eitaro"))
+    (ok (string= (with-keys ((location "loc" "Vienna"))
+		     alist
+		   location)
+		 "Vienna"))
+    (ok (with-keys ((zero 1))
+	    alist2
+	  zero))
+    (ok (= (with-keys (:second)
+		     alist3
+		   second)
+	   22))))
+
 (deftest remove-from-alist
   (let ((alist '(("name" . "Eitaro") ("email" . "e.arrows@gmail.com"))))
     (ok (equalp (remove-from-alist alist "name")
