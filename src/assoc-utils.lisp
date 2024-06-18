@@ -3,6 +3,7 @@
   (:use #:cl)
   (:export #:*assoc-test*
            #:aget
+	   #:with-keys
            #:remove-from-alist
            #:remove-from-alistf
            #:delete-from-alist
@@ -45,6 +46,52 @@
                  ,setter
                  ,newval)
               `(aget ,getter ,key ,default)))))
+
+(defmacro with-keys (keys alist &body body)
+  "The macro `with-keys` is the alist equivalent of `with-slots`.
+
+(with-keys
+   (\"name\" (loc \"location\") (time \"time\" 2024))
+    (list (cons \"name\" \"eitaro\") (cons \"location\" \"vienna\"))
+  (declare (string name))
+  (setf loc (string-upcase loc))
+  (format nil \"Hi, ~a in ~a around ~a!\" name loc time))
+;; => \"Hi, eitaro in VIENNA around 2024!\"
+
+The first parameter is a list of keys that `with-keys` will reference in the alist
+provided in the second parameter. `With-keys` will attempt to convert each
+key into a symbol, binding the alist value to it during body execution.
+
+If you don't want `with-keys` to guess the symbol for a key, supply a list -
+`(symbol key)` - in place of the key, as in `(loc \"location\")` above.
+If the key is a number, you have to supply a symbol name since common lisp
+symbols can not consist of only numbers.
+
+If you want to supply a default value, you have to supply a list -
+`(symbol key default)` - in place of the key, as in `(time \"time\" 2024)`.
+q
+Code and documentation adapted from cl-hash-util."
+  (let ((alist-symbol (gensym)))
+    (list* (quote let*)
+	   (list* (list alist-symbol alist)
+		  (mapcar
+		   (lambda (entry)
+		     (let ((symbol (if (listp entry)
+				       (car entry)
+				       (intern (string-upcase (format nil "~A" entry)))))
+			   (key (if (listp entry)
+				    (second entry)
+				    entry))
+			   (default (when (listp entry)
+				      (third entry))))
+		       (list symbol (list (quote aget)
+					  alist-symbol
+					  (if (and (symbolp key) (not (keywordp key)))
+					      (quote key)
+					      key)
+					  default))))
+		   keys))
+	   body)))
 
 (defun remove-from-alist (alist &rest keys)
   (remove-if
