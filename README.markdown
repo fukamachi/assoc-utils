@@ -29,6 +29,29 @@ Utilities for manipulating association lists.
 ;=> (("name" . "Eitaro Fukamachi") ("email" . "e.arrows@gmail.com"))
 ```
 
+### alist-get
+
+```common-lisp
+(defvar *data*
+  '((:VERSION . "0.6")
+    (:GENERATOR . "openstreetmap-cgimap 2.0.1 (1992 spike-08.openstreetmap.org)")
+    (:COPYRIGHT . "OpenStreetMap and contributors")
+    (:ATTRIBUTION . "http://www.openstreetmap.org/copyright")
+    (:LICENSE . "http://opendatacommons.org/licenses/odbl/1-0/")
+    (:ELEMENTS
+     ((:TYPE . "node") (:ID . 1) (:LAT . 42.79572) (:LON . 13.569003)
+      (:TIMESTAMP . "2024-09-13T11:52:01Z") (:VERSION . 39)
+      (:CHANGESET . 156568263) (:USER . "SomeoneElse_Revert") (:UID . 1778799)
+      (:TAGS (:|COMMUNICATION:MICROWAVE| . "yes") (:|COMMUNICATION:RADIO| . "fm")
+       (:DESCRIPTION . "Radio Subasio") (:FREQUENCY . "105.5 MHz")
+       (:MAN--MADE . "mast") (:NAME . "Monte Piselli - San Giacomo")
+       (:NOTE . "This is the very first node on OpenStreetMap.")
+       (:|TOWER:CONSTRUCTION| . "lattice") (:|TOWER:TYPE| . "communication"))))))
+
+(alist-get *data* '(:elements 0 :tags :note))
+;=> "This is the very first node on OpenStreetMap."
+```
+
 ### with-keys
 
 The macro `with-keys` is the alist equivalent of [`with-slots`](https://novaspec.org/cl/f_with-slots).

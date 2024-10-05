@@ -16,7 +16,8 @@
            #:alist-values
            #:alistp
            #:alist
-           #:alist=))
+           #:alist=
+           #:alist-get))
 (in-package :assoc-utils)
 
 (defvar *assoc-test* #'equal)
@@ -159,3 +160,20 @@ Code and documentation adapted from cl-hash-util."
   (check-type alist2 alist)
   (equalp (sort (copy-seq alist1) #'string< :key #'car)
           (sort (copy-seq alist2) #'string< :key #'car)))
+
+(defun aget* (seq key &optional default)
+  (cond
+    ((and (integerp key)
+          (<= 0 key))
+     (typecase seq
+       (list (let ((rest (nthcdr key seq)))
+               (if rest
+                   (first rest)
+                   default)))
+       (otherwise
+        (elt seq key))))
+    (t
+     (aget seq key default))))
+
+(defun alist-get (alist keys)
+  (reduce #'aget* keys :initial-value alist))
